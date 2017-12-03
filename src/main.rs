@@ -3,7 +3,6 @@ extern crate getopts;
 use std::io::prelude::*;
 use std::net::TcpListener;
 use std::net::TcpStream;
-use std::fs::File;
 use std::process::Command;
 use getopts::Options;
 use std::env;
@@ -66,10 +65,9 @@ fn handle_connection(mut stream: TcpStream, logfile : &str, restartcommand : &st
 
     }else if buffer.starts_with(getlog) {
 
-        let mut file = File::open(logfile).unwrap();
 
-        let mut contents = String::new();
-        file.read_to_string(&mut contents).unwrap();
+        let contents = Command::new("sh").arg("-c").arg(format!("tail -n 300 {}", logfile)).output().expect("Tail log file fail");
+        let contents = String::from_utf8_lossy(&contents.stdout).into_owned();
 
         ("HTTP/1.1 200 OK\r\n\r\n", contents)
 
