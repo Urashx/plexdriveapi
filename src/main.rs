@@ -31,7 +31,7 @@ fn main() {
     let command = matches.opt_str("c").expect("Specify command");
 
 
-    let bindadress  = format!("127.0.0.1:{}", port);
+    let bindadress  = format!("0.0.0.0:{}", port);
     println!("Start listening on {}", bindadress);
     let listener = TcpListener::bind(bindadress).unwrap();
     for stream in listener.incoming() {
